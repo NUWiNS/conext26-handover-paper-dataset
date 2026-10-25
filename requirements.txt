@@ -1,0 +1,5 @@
+# Pinned to the versions used to produce the camera-ready figures.
+# Python 3.8+ (the processed pickles were written with protocol 4).
+matplotlib==3.7.5
+numpy==1.24.4
+pandas==2.0.3

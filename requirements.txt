@@ -1,5 +1,8 @@
-# Pinned to the versions used to produce the camera-ready figures.
-# Python 3.8+ (the processed pickles were written with protocol 4).
-matplotlib==3.7.5
-numpy==1.24.4
-pandas==2.0.3
+# Versions actually used to regenerate the camera-ready figures.
+# Verified on Python 3.10.16.
+#
+# NOTE: the processed data ships as Python pickles. Pickles of numpy/pandas
+# objects are sensitive to major-version changes, so if you hit an
+# unpickling error, match these versions rather than using newer ones.
+matplotlib==3.10.3
+numpy==2.2.2

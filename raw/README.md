@@ -14,7 +14,11 @@ python raw/check_raw.py --data /path/to/raw --full     # exact row counts
 
 Walks the deposit, parses every CSV header, checks the columns each export
 kind must have, and reports per-file status plus a summary. Exits non-zero
-on any missing or malformed file. Expected output on a complete deposit:
+on any missing or malformed file.
+
+`--data` may point at the whole deposit or at a single unpacked trip
+directory; both are recognised. Note that if you pipe the output, `$?` is
+the exit status of the pipe, not of the checker -- check it directly. Expected output on a complete deposit:
 
 ```
 kind                   files          size            rows

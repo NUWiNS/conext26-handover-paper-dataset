@@ -60,6 +60,8 @@ def data(*parts):
 # Article 64). Outputs absent from this table are not in the paper and are
 # written without a prefix, which makes the distinction visible in a listing.
 PAPER_FIG = {
+    "all_events_overall_vs_ho_LTE.pdf": 2,
+    "all_events_overall_vs_ho_5G.pdf": 2,
     "ho_event_overhead_pct_by_event.pdf": 3,
     "richness_overall.pdf": 4,
     "richness_comp_2022_2024.pdf": 5,

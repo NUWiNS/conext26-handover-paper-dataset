@@ -33,7 +33,7 @@ Tiers are cumulative.
 | Fig | Caption | Script | Tier | Status |
 |---|---|---|---|---|
 | 1 | Basic HO procedure | — | — | static diagram |
-| 2 | Distribution of HO-related reporting events (LTE, 5G) | `parse_sigmetrics_merged.py` | full | not ported |
+| 2 | Distribution of HO-related reporting events (LTE, 5G) | `fig_overall.py` | small | **works** |
 | 3 | Event overhead breakdown | `fig_events.py` | small | **works** |
 | 4 | Richness of HO configuration parameters | `fig_diversity.py` | small | **works** |
 | 5 | Richness comparison, R(2024)−R(2022) | `fig_diversity.py` | small | **works** |

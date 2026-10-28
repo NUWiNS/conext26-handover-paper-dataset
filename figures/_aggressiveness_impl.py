@@ -335,7 +335,7 @@ def build_tuples(metric_dict, event, tq_filter=None, radio=None):
 EVENTS = ['A1', 'A2', 'A3', 'A5', 'B1']   # A6 is not in the paper
 
 # Events that get their own Fig 8 aggressiveness panel.
-PLOT_EVENTS = ['A1', 'A2', 'A3', 'B1']
+PLOT_EVENTS = ['A1', 'A2', 'A3', 'A5', 'B1']
 RADIO_TQ = [
     ('LTE', 'rsrp', lte_dict),
     ('LTE', 'rsrq', lte_dict),
@@ -534,7 +534,7 @@ def plot_event_aggressiveness(ev):
 
     # X tick labels (operator name + sample count), placed below the M/T tags
     ax.set_xticks([s[4] for s in slots])
-    ax.set_xticklabels([f'{op}\n({n:,})' for (_, _, op, n, _) in slots],
+    ax.set_xticklabels([op for (_, _, op, _, _) in slots],
                        fontsize=9, rotation=45, ha='right')
     ax.tick_params(axis='x', pad=15, length=0)
     ax.tick_params(axis='y', labelsize=10)

@@ -832,34 +832,7 @@ def plot_ho_contribution_per_config():
         )
 
 
-def plot_ho_contribution_overall_per_radio():
-    """One overall plot per radio: aggregate (combo, ttt) keys ACROSS all
-    events for that radio so each entry is uniquely identified by
-    (event, combo, ttt). Plots 3 operators overlaid."""
-    cells = set(trig_counter_by_key) | set(ho_count_by_key)
-    radios_present = sorted({r for (r, _, _) in cells})
-    for radio in radios_present:
-        events_for_radio = sorted({ev for (r, ev, _) in cells if r == radio})
-        key_sets = {}
-        for op in OPS:
-            trig_combined, ho_combined = {}, {}
-            for ev in events_for_radio:
-                trig = trig_counter_by_key.get((radio, ev, op), {})
-                ho   = ho_count_by_key.get((radio, ev, op),     {})
-                for k, c in trig.items():
-                    trig_combined[(ev,) + (k,)] = c
-                for k, c in ho.items():
-                    ho_combined[(ev,) + (k,)] = c
-            key_sets[op] = (trig_combined, ho_combined)
-        per_op = _build_per_op_records(key_sets)
-        _render_overlay_kink_plot(
-            per_op,
-            str(config.out(f'ho_contribution_overall_{radio}.pdf'))
-        )
-
-
 plot_ho_contribution_per_config()
-plot_ho_contribution_overall_per_radio()
 
 
 # ─── Printed summaries ───────────────────────────────────────────────────────

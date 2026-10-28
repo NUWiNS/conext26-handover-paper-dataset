@@ -42,15 +42,33 @@ def main():
     failure = {op: sum(ho_events[op].get(k, 0) for k in FAILURE_KEYS)
                for op in ho_events}
 
+    # Same counts, but split by the ORIGIN radio of the handover: the first
+    # half of an "X->Y" transition key. Figs 2 and 3 compare HOs that started
+    # on LTE against those that started on 5G, which the flattened table above
+    # cannot answer. Transition keys carry technology detail (NSA/SA and band),
+    # so the origin is taken as "5G" when the left side mentions 5G at all.
+    ho_by_origin = {}
+    for op, per_ho in ho_classification.items():
+        slot = {"LTE": Counter(), "5G": Counter()}
+        for transition, ev_list in per_ho.items():
+            origin = "5G" if "5G" in transition.split("->")[0] else "LTE"
+            for raw in ev_list:
+                slot[origin][raw.strip().replace("nan ", "")] += 1
+        ho_by_origin[op] = slot
+
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "wb") as fh:
-        pkl.dump({"ho_events": ho_events, "failure": failure}, fh, protocol=4)
+        pkl.dump({"ho_events": ho_events, "failure": failure,
+                  "ho_by_origin": ho_by_origin}, fh, protocol=4)
 
     print(f"wrote {out} ({out.stat().st_size/1024:.1f} KB)")
     for op in OPS:
+        by_o = ho_by_origin.get(op, {})
         print(f"  {op:<10} HO-triggering events={sum(ho_events.get(op, {}).values()):>7}"
-              f"  F={failure.get(op, 0)}")
+              f"  F={failure.get(op, 0):>5}"
+              f"  LTE-origin={sum(by_o.get('LTE', {}).values()):>7}"
+              f"  5G-origin={sum(by_o.get('5G', {}).values()):>7}")
 
 
 if __name__ == "__main__":

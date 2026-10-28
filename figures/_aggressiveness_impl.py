@@ -328,7 +328,7 @@ def build_tuples(metric_dict, event, tq_filter=None, radio=None):
 # ─── PART 1 : Aggressiveness ─────────────────────────────────────────────────
 # Per (radio, tq, op, event): count aggressive / moderate / conservative samples.
 
-EVENTS = ['A1', 'A2', 'A3', 'A5', 'A6', 'B1']
+EVENTS = ['A1', 'A2', 'A3', 'A5', 'B1']   # A6 is not in the paper
 RADIO_TQ = [
     ('LTE', 'rsrp', lte_dict),
     ('LTE', 'rsrq', lte_dict),

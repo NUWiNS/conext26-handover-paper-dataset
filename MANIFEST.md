@@ -38,8 +38,8 @@ Tiers are cumulative.
 | 4 | Richness of HO configuration parameters | `fig_diversity.py` | small | **works** |
 | 5 | Richness comparison, R(2024)−R(2022) | `fig_diversity.py` | small | **works** |
 | 6 | RSRP/RSRQ distributions | `fig_rsrp.py` | medium | **works** |
-| 7 | Normalized triggered events | `fig_events.py` | small | **works** |
-| 8 | Aggressiveness of an event to be triggered (a–e) | `fig_aggressiveness.py` | small | **works** |
+| 7 | Normalized triggered events | — | — | not generated (dropped at author's request) |
+| 8 | Aggressiveness of an event to be triggered (a–e) | `fig_aggressiveness.py` | small | **works** (A1, A2, A3, A5, B1; A6 not in the paper) |
 | 9 | Concentration of HOs across configurations (a–f) | `fig_concentration.py` | small | **works** |
 | 10 | Fraction of A3 ping-pong HOs (a, b) | `fig_pingpong.py` | full | **works** |
 | 11 | A3 dominant combinations and RSRP | `parse_sigmetrics_merged.py` | full | not ported |

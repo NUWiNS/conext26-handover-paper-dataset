@@ -31,8 +31,6 @@ Data sources:
 Outputs (in <figures_out>/):
     aggressiveness.csv
     aggressiveness_by_event.pdf
-    triggered_vs_ho_overlap.csv
-    triggered_vs_ho_overlap.pdf
 """
 import os
 import csv
@@ -592,7 +590,6 @@ def _norm_triggered_key(combo, ttt):
     return (tuple(float(v) for v in combo), float(ttt))
 
 
-overlap_rows = []
 overlap_summary = {}
 per_config_records = {}    # (radio, ev, op) -> list of (key, trig_count, ho_count), sorted desc by ho_count
 trig_counter_by_key = {}   # (radio, ev, op) -> Counter of {(combo, ttt): trig_count}
@@ -645,16 +642,6 @@ for (radio, ev), srcs in HO_SRC_BY_RE.items():
             'trig_unused_pct':  trig_unused_pct,
             'n_trig': n_trig,
         }
-        overlap_rows.append({
-            'Radio': radio, 'Event': ev, 'Operator': op,
-            'HO_unique_combos': len(ho_keys),
-            'Triggered_unique_combos': len(trig_keys),
-            'Shared_combos': len(intersect),
-            'HO_mass_in_triggered_%': f'{(100 * ho_in_trig_pct / ho_total_pct) if ho_total_pct else 0:.1f}',
-            'Triggered_mass_in_HO_%':  f'{trig_overlap_pct:.1f}',
-            'Triggered_unnecessary_%': f'{trig_unused_pct:.1f}',
-            'N_triggered': n_trig,
-        })
 
         records = [(key, trig_counter[key], ho_count_lookup.get(key, 0))
                    for key in trig_counter]
@@ -664,79 +651,15 @@ for (radio, ev), srcs in HO_SRC_BY_RE.items():
         trig_counter_by_key[(radio, ev, op)] = trig_counter
         ho_count_by_key[(radio, ev, op)]     = ho_count_lookup
 
-# Write CSV
-ovl_csv = OUT_DIR + 'triggered_vs_ho_overlap.csv'
-with open(ovl_csv, 'w', newline='') as f:
-    w = csv.DictWriter(f, fieldnames=[
-        'Radio', 'Event', 'Operator',
-        'HO_unique_combos', 'Triggered_unique_combos', 'Shared_combos',
-        'HO_mass_in_triggered_%', 'Triggered_mass_in_HO_%',
-        'Triggered_unnecessary_%', 'N_triggered',
-    ])
-    w.writeheader(); w.writerows(overlap_rows)
-print(f'Overlap CSV -> {ovl_csv}')
 
 
 # Plot: per (radio, event) panel, single bar per operator showing
 #   % of overall triggered samples whose (combo, TTT) is present in the HO set.
 #   I.e. how dominant the HO-driving configs are within the overall triggered set.
-def plot_overlap():
-    panels = ['A2', 'A3', 'A5', 'B1']
-    bar_w = 0.28
-    fig, axes = plt.subplots(1, len(panels), figsize=(12, 3.0),
-                             constrained_layout=True, sharey=True)
-    RADIO_BAR_COLOR = {'LTE': '#3a7ca5', '5G': '#e07a5f'}
-
-    def _ho_overlap_pct(s):
-        """% of unique (combo,TTT) configs in the triggered set that DO appear
-        in the HO set (i.e., lead to at least one handover)."""
-        if not s or s['trig_keys'] == 0:
-            return None
-        return 100.0 * s['shared_keys'] / s['trig_keys']
-
-    for ax, ev in zip(axes, panels):
-        x = np.arange(len(OPS))
-        lte_vals, fiveg_vals = [], []
-        for op in OPS:
-            v_lte = _ho_overlap_pct(overlap_summary.get(('LTE', ev, op)))
-            v_5g  = _ho_overlap_pct(overlap_summary.get(('5G',  ev, op)))
-            lte_vals.append(0 if v_lte is None else v_lte)
-            fiveg_vals.append(0 if v_5g is None else v_5g)
-
-        ax.bar(x - bar_w/2, lte_vals,   bar_w,
-               color=RADIO_BAR_COLOR['LTE'], label='LTE',
-               edgecolor='white', linewidth=0.4)
-        ax.bar(x + bar_w/2, fiveg_vals, bar_w,
-               color=RADIO_BAR_COLOR['5G'],  label='5G',
-               edgecolor='white', linewidth=0.4)
-
-        for xi in range(len(OPS)):
-            if lte_vals[xi] > 0:
-                ax.text(xi - bar_w/2, lte_vals[xi] + 1.5,
-                        f'{lte_vals[xi]:.0f}', ha='center', va='bottom',
-                        fontsize=7, color='#222')
-            if fiveg_vals[xi] > 0:
-                ax.text(xi + bar_w/2, fiveg_vals[xi] + 1.5,
-                        f'{fiveg_vals[xi]:.0f}', ha='center', va='bottom',
-                        fontsize=7, color='#222')
-
-        ax.set_xticks(x)
-        ax.set_xticklabels(OPS, rotation=45, ha='right', fontsize=8)
-        ax.set_ylim(0, 110)
-        ax.set_title(ev, fontsize=11, fontweight='bold')
-        ax.grid(axis='y', alpha=0.4)
-        ax.set_axisbelow(True)
-
-    axes[0].set_ylabel('% of triggered configs\nthat lead to HO',
-                       fontsize=9)
-    axes[0].legend(loc='upper right', fontsize=8, framealpha=0.92)
-
-    plt.savefig(OUT_DIR + 'triggered_vs_ho_overlap.pdf', dpi=150)
-    plt.close()
-    print(f'Overlap plot -> {OUT_DIR}triggered_vs_ho_overlap.pdf')
-
-
-plot_overlap()
+# The triggered-vs-HO overlap plot that lived here is not used in the paper
+# and has been removed. The overlap CSV above is kept: it is the underlying
+# table, costs nothing extra to write, and the computation feeding it is
+# shared with the per-config figures below.
 
 
 # ─── Per-event per-config HO-contribution plot ───────────────────────────────

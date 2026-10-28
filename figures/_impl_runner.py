@@ -16,7 +16,7 @@ def make(name):
 
     def fn():
         run_impl()
-        p = config.FIG_OUT / name
+        p = config.out(name)
         if not p.exists():
             raise RuntimeError(f"{name} was not produced by the analysis module")
         return p

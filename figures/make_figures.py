@@ -37,7 +37,9 @@ def main():
             m = importlib.import_module(name)
             print(f"{name}:")
             for fig in m.FIGURES:
-                print(f"    {fig}")
+                n = config.PAPER_FIG.get(fig)
+                tag = f"Fig {n:>2}" if n else "  --  "
+                print(f"    {tag}  {config.paper_name(fig)}")
         return
 
     print(f"data: {config.DATA_ROOT}")

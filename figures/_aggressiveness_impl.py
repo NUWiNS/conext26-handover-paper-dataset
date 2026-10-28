@@ -545,7 +545,7 @@ def plot_event_aggressiveness(ev):
 
     # (no per-event legend — class colors / M / T are documented in the paper text)
 
-    out_path = OUT_DIR + f'aggressiveness_{ev}.pdf'
+    out_path = str(config.out(f'aggressiveness_{ev}.pdf'))
     plt.savefig(out_path, dpi=150)
     plt.close()
     print(f'Aggressiveness plot -> {out_path}')
@@ -828,7 +828,7 @@ def plot_ho_contribution_per_config():
         per_op = _build_per_op_records(key_sets)
         _render_overlay_kink_plot(
             per_op,
-            OUT_DIR + f'ho_contribution_per_config_{ev}_{radio}.pdf'
+            str(config.out(f'ho_contribution_per_config_{ev}_{radio}.pdf'))
         )
 
 
@@ -854,7 +854,7 @@ def plot_ho_contribution_overall_per_radio():
         per_op = _build_per_op_records(key_sets)
         _render_overlay_kink_plot(
             per_op,
-            OUT_DIR + f'ho_contribution_overall_{radio}.pdf'
+            str(config.out(f'ho_contribution_overall_{radio}.pdf'))
         )
 
 

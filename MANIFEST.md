@@ -9,6 +9,11 @@ cd figures
 python make_figures.py --data /path/to/processed --out ../figures_out
 ```
 
+Outputs are named after the figure they reproduce, e.g.
+`fig08_aggressiveness_A5.pdf` for Fig. 8. Anything a module writes that is
+not in the paper is left unprefixed, so a directory listing separates the
+two at a glance.
+
 Modules run independently: figures whose inputs are absent are reported as
 **skipped**, the rest still run. The small tier alone produces 16 files.
 

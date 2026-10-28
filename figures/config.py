@@ -56,6 +56,32 @@ def data(*parts):
     return p
 
 
+# Figure number each output carries in the paper (Proc. ACM Netw. 4, CoNEXT4,
+# Article 64). Outputs absent from this table are not in the paper and are
+# written without a prefix, which makes the distinction visible in a listing.
+PAPER_FIG = {
+    "ho_event_overhead_pct_by_event.pdf": 3,
+    "richness_overall.pdf": 4,
+    "richness_comp_2022_2024.pdf": 5,
+    "rsrp_rsrq_subplots.pdf": 6,
+    "all_events_break_tech_mod_normalized.pdf": 7,
+    **{f"aggressiveness_{e}.pdf": 8
+       for e in ("A1", "A2", "A3", "A5", "A6", "B1")},
+    **{f"ho_contribution_per_config_{e}.pdf": 9
+       for e in ("A3_LTE", "A3_5G", "A5_LTE", "A5_5G", "B1_5G", "A2_5G")},
+    "a3_ping_pong_distribution_15s.pdf": 10,
+    "a3_ping_pong_distribution_params_15s.pdf": 10,
+    "a5_ping_pong_distribution_params_15s.pdf": 12,
+    "b1_ping_pong_distribution_15s.pdf": 13,
+}
+
+
+def paper_name(name):
+    """Prefix an output with its paper figure number, e.g. fig03_<name>."""
+    n = PAPER_FIG.get(name)
+    return f"fig{n:02d}_{name}" if n else name
+
+
 def out(name):
     FIG_OUT.mkdir(parents=True, exist_ok=True)
-    return FIG_OUT / name
+    return FIG_OUT / paper_name(name)

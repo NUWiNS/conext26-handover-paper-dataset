@@ -27,6 +27,11 @@ BUNDLE = {
         ("events", "new_parse/all/main_op_all_events_interface_list_2024.pkl"),
         ("aggressiveness", "ho_params_cache.pkl"),
         # NOTE: lives on the shared mount, not under --src; see --extra below
+        # Figs 4 and 5 (fig_diversity) need only these two 22 KB files plus
+        # op_metric_selected_dict.pkl, which is already in this tier, so they
+        # belong here rather than behind a 1.25 GB medium download.
+        ("diversity", "yearwise_diversity_pkls/overall_2022.pkl"),
+        ("diversity", "yearwise_diversity_pkls/overall_2024.pkl"),
     ],
     "medium": [
         ("rsrp", "new_parse/rsrp_freq_dict_1.pkl"),
@@ -39,8 +44,6 @@ BUNDLE = {
         ("diversity", "timezone_data_processed.pkl"),
         ("diversity", "timezone_data_processed_2022.pkl"),
         ("diversity", "timezone_data_processed_2024.pkl"),
-        ("diversity", "yearwise_diversity_pkls/overall_2022.pkl"),
-        ("diversity", "yearwise_diversity_pkls/overall_2024.pkl"),
         ("diversity", "yearwise_diversity_pkls/fiveg_band_2022.pkl"),
         ("diversity", "yearwise_diversity_pkls/fiveg_band_2024.pkl"),
         ("diversity", "yearwise_diversity_pkls/fiveg_nsa_sa_2022.pkl"),

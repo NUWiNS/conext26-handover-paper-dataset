@@ -12,7 +12,17 @@ import os
 import sys
 from pathlib import Path
 
+import matplotlib
+import matplotlib.style          # not pulled in by `import matplotlib`
+matplotlib.use("Agg")
+
 _REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# The paper's figures were styled by a matplotlibrc that happened to sit in
+# the analysis working directory, so it applied only when the scripts were
+# run from there. Applying it explicitly on import keeps the regenerated
+# figures identical regardless of the current directory.
+matplotlib.style.use(Path(__file__).resolve().parent / "paper.mplstyle")
 
 DATA_ROOT = Path(
     os.environ.get("CONEXT26_DATA", _REPO_ROOT / "processed")

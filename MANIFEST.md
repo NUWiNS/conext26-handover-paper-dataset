@@ -10,7 +10,7 @@ python make_figures.py --data /path/to/processed --out ../figures_out
 ```
 
 Modules run independently: figures whose inputs are absent are reported as
-**skipped**, the rest still run. The small tier alone produces 14 files.
+**skipped**, the rest still run. The small tier alone produces 16 files.
 
 ## Data tiers
 
@@ -19,8 +19,8 @@ Tiers are cumulative.
 
 | Tier | Contents | Size | Figures |
 |---|---|---|---|
-| small | `events/`, `aggressiveness/` | **53 MB** | 3, 7, 8, 9 |
-| medium | + `rsrp/`, `diversity/` | ~1.2 GB | 4, 5, 6 |
+| small | `events/`, `aggressiveness/`, 2 files of `diversity/` | **53 MB** | 3, 4, 5, 7, 8, 9 |
+| medium | + `rsrp/`, rest of `diversity/` | ~1.2 GB | 6 |
 | full | + `handover/` | ~19.7 GB | 2, 10–16, 18 |
 
 ## Status by paper figure
@@ -30,8 +30,8 @@ Tiers are cumulative.
 | 1 | Basic HO procedure | — | — | static diagram |
 | 2 | Distribution of HO-related reporting events (LTE, 5G) | `parse_sigmetrics_merged.py` | full | not ported |
 | 3 | Event overhead breakdown | `fig_events.py` | small | **works** |
-| 4 | Richness of HO configuration parameters | `parse_sigmetrics_diversity_merged.py` | medium | not ported |
-| 5 | Richness comparison, R(2024)−R(2022) | `parse_sigmetrics_diversity_merged.py` | medium | not ported |
+| 4 | Richness of HO configuration parameters | `fig_diversity.py` | small | **works** |
+| 5 | Richness comparison, R(2024)−R(2022) | `fig_diversity.py` | small | **works** |
 | 6 | RSRP/RSRQ distributions | `fig_rsrp.py` | medium | **works** |
 | 7 | Normalized triggered events | `fig_events.py` | small | **works** |
 | 8 | Aggressiveness of an event to be triggered (a–e) | `fig_aggressiveness.py` | small | **works** |

@@ -1,0 +1,36 @@
+# Style used for the figures in the paper.
+#
+# Recovered from the matplotlibrc that sat in the analysis working directory
+# and was picked up implicitly from the current directory. It was never part
+# of the scripts, so running them from anywhere else produced differently
+# styled figures. config.py now applies this explicitly, which makes the
+# styling independent of where the scripts are run from.
+#
+# The original asked for Verdana, which was not installed on the machine that
+# produced the camera-ready: the published PDFs embed DejaVuSans-Bold, which
+# is matplotlib's own fallback. DejaVu Sans is named here directly so the
+# figures render identically everywhere without a missing-font warning.
+
+figure.autolayout     : True
+
+font.family           : sans-serif
+font.sans-serif       : DejaVu Sans
+font.weight           : bold
+
+axes.labelsize        : 18
+axes.labelweight      : bold
+
+xtick.labelsize       : 14
+ytick.labelsize       : 14
+
+lines.linewidth       : 2.5
+lines.markeredgewidth : 2
+markers.fillstyle     : none
+
+legend.numpoints      : 1
+legend.fontsize       : 14
+
+savefig.dpi           : 300
+savefig.bbox          : tight
+pdf.fonttype          : 42
+ps.fonttype           : 42

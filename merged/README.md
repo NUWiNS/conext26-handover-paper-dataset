@@ -19,15 +19,15 @@ this deposit; see the top-level README.
 | `trip4_2024_all_df.pkl` | 2024, LAX–Boston | 2024-11-01 – 2024-11-08 | 2,154 | 6,223,082 |
 | | | | **17,771** | **16,508,113** |
 
-Per operator:
+Per operator. Trip 1 totals 352,218 more rows (649 runs) than the three
+operators below account for: those runs carry a UE radio state in `Operator`
+instead of a carrier, and are described under Data caveats.
 
 | Trip | Operator | Runs | Rows | Dates |
 |---|---|---|---|---|
 | trip1_2022 | AT&T | 1,186 | 1,571,993 | 2022-08-08 – 2022-08-15 |
 | trip1_2022 | T-Mobile | 2,183 | 1,571,710 | 2022-08-08 – 2022-08-15 |
 | trip1_2022 | Verizon | 1,903 | 1,677,087 | 2022-08-07 – 2022-08-15 |
-| trip1_2022 | `(Searching)` | 9 | 10,431 | 2022-08-08 |
-| trip1_2022 | `No service` | 30 | 32,233 | 2022-08-15 |
 | trip2_2023 | AT&T | 686 | 648,891 | 2023-05-13 – 2023-05-16 |
 | trip2_2023 | T-Mobile | 171 | 613,356 | 2023-05-13 – 2023-05-16 |
 | trip2_2023 | Verizon | 207 | 596,849 | 2023-05-13 – 2023-05-16 |
@@ -76,9 +76,9 @@ python query_merged.py --data . --trip trip4_2024 --operator AT\&T \
 python query_merged.py --data . --sample 0.01 --concat --out peek.pkl
 ```
 
-## Three things that will bite you
+## Data caveats
 
-**1. `Timestamp` is float64 Unix epoch *seconds*.** Converting it without
+**`Timestamp` is float64 Unix epoch seconds.** Converting it without
 specifying the unit makes pandas read the values as nanoseconds and silently
 collapse every date to 1970-01-01 — no error, just wrong answers:
 
@@ -92,7 +92,7 @@ Values are UTC and `Timestamp` is non-null on 100% of rows. The separate
 every row but is populated on only 7.6% of them (measured on trip 2) — so it
 is not suitable for filtering.
 
-**2. There is no fixed schema.** Columns vary run to run, because XCAL only
+**The schema is not fixed.** Columns vary run to run, because XCAL only
 emits fields the chipset actually reported:
 
 | | Columns |
@@ -110,7 +110,7 @@ if "5G KPI PCell RF Serving SSB RSRP [dBm]" in df.columns:
     ...
 ```
 
-**3. `Operator` sometimes holds a radio state, not an operator.** Trip 1
+**`Operator` can hold a radio state rather than a carrier.** Trip 1
 contains `(Searching)` (9 runs) and `No service` (30 runs) — UE states that
 reached the field during cell reselection. Together they are 42,664 rows, 0.8%
 of that trip. Filter to the three operator names explicitly rather than

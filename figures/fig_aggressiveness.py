@@ -1,11 +1,12 @@
 """Section 5.2 -- aggressiveness of HO configurations (Fig. aggressiveness_*)."""
 from _impl_runner import make
 
-# A6 is not shown in the paper -- it is discussed through its share of
-# reported events instead -- so it is no longer generated.
+# A5 and A6 no longer get a panel. A6 is not in the paper at all; A5 is
+# dropped at the author's request. A5 is still analysed, because Fig 9 needs
+# its per-config tables.
 FIGURES = {
     f"aggressiveness_{ev}.pdf": make(f"aggressiveness_{ev}.pdf")
-    for ev in ("A1", "A2", "A3", "A5", "B1")
+    for ev in ("A1", "A2", "A3", "B1")
 }
 
 if __name__ == "__main__":

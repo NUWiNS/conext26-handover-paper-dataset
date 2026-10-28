@@ -67,7 +67,7 @@ PAPER_FIG = {
     "richness_comp_2022_2024.pdf": 5,
     "rsrp_rsrq_subplots.pdf": 6,
     **{f"aggressiveness_{e}.pdf": 8
-       for e in ("A1", "A2", "A3", "A5", "B1")},
+       for e in ("A1", "A2", "A3", "B1")},
     **{f"ho_contribution_per_config_{e}.pdf": 9
        for e in ("A3_LTE", "A3_5G", "A5_LTE", "A5_5G", "B1_5G", "A2_5G")},
     "a3_ping_pong_distribution_15s.pdf": 10,

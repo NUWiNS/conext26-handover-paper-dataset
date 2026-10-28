@@ -328,7 +328,14 @@ def build_tuples(metric_dict, event, tq_filter=None, radio=None):
 # ─── PART 1 : Aggressiveness ─────────────────────────────────────────────────
 # Per (radio, tq, op, event): count aggressive / moderate / conservative samples.
 
+# Events the analysis covers. A5 stays here because the per-config figures
+# (Fig 9) need its triggered/HO tables even though it no longer gets an
+# aggressiveness panel of its own; dropping it from this list would silently
+# remove ho_contribution_per_config_A5_{LTE,5G}.pdf.
 EVENTS = ['A1', 'A2', 'A3', 'A5', 'B1']   # A6 is not in the paper
+
+# Events that get their own Fig 8 aggressiveness panel.
+PLOT_EVENTS = ['A1', 'A2', 'A3', 'B1']
 RADIO_TQ = [
     ('LTE', 'rsrp', lte_dict),
     ('LTE', 'rsrq', lte_dict),
@@ -551,7 +558,7 @@ def plot_event_aggressiveness(ev):
     print(f'Aggressiveness plot -> {out_path}')
 
 
-for ev in EVENTS:
+for ev in PLOT_EVENTS:
     plot_event_aggressiveness(ev)
 
 

@@ -1,8 +1,13 @@
-# Versions actually used to regenerate the camera-ready figures.
+# Versions actually used to produce the camera-ready figures.
 # Verified on Python 3.10.16.
 #
-# NOTE: the processed data ships as Python pickles. Pickles of numpy/pandas
-# objects are sensitive to major-version changes, so if you hit an
-# unpickling error, match these versions rather than using newer ones.
+# NOTE: both tiers of this dataset ship as Python pickles, and pickles of
+# numpy/pandas objects are sensitive to version changes. These pins are not
+# advisory. The merged dataframes were written in 2024 and still reference
+# the pre-NumPy-2.0 module name `numpy.core.multiarray`; they load under the
+# versions below via NumPy's compatibility shim, which emits an ImportWarning
+# and is deprecation-scheduled. If you hit an unpickling error, match these
+# versions rather than reaching for newer ones.
 matplotlib==3.10.3
 numpy==2.2.2
+pandas==2.3.1

@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "upload_type": "dataset",
+    "title": "Dataset and artifacts for \"Too Many Reports, Too Few Handovers: A Large-Scale Study of Configuration Inefficiencies in Operational 5G Networks\"",
+    "description": "<p>Raw and processed measurement data behind the CoNEXT 2026 paper <em>Too Many Reports, Too Few Handovers: A Large-Scale Study of Configuration Inefficiencies in Operational 5G Networks</em> (Proc. ACM Netw. 4, CoNEXT4, Article 64).</p><p>The dataset covers 15,000+ km of driving across the United States between 2022 and 2024, measuring the three major US operators (AT&amp;T, T-Mobile, Verizon) with XCAL Solo. It contains the raw operator-side control-plane exports &mdash; RRC message logs, signalling flow (protocol ladder), per-second PHY/KPI time series, and 5G SIB dumps &mdash; together with a trimmed set of processed pickles sufficient to regenerate the figures in the paper.</p><p>Analysis and figure-generation code: https://github.com/NUWiNS/conext26-handover-paper-dataset</p><p>See MANIFEST.md in the code repository for the file-by-file inventory, and raw/README.md for the integrity and summary scripts.</p>",
+    "access_right": "open",
+    "license": "cc-by-4.0",
+    "language": "eng",
+    "keywords": ["5G", "cellular networks", "handover", "mobility management", "network measurement", "RRC", "3GPP", "measurement dataset"],
+    "creators": [
+      {"name": "Ghoshal, Moinak",        "affiliation": "Northeastern University"},
+      {"name": "Khan, Imran",            "affiliation": "Northeastern University"},
+      {"name": "Dinh, Phuc",             "affiliation": "Northeastern University"},
+      {"name": "Kong, Z. Jonny",         "affiliation": "Meta Platforms"},
+      {"name": "Basit, Omar",            "affiliation": "Purdue University"},
+      {"name": "Wang, Sizhe",            "affiliation": "Northeastern University"},
+      {"name": "Feng, Yufei",            "affiliation": "Northeastern University"},
+      {"name": "Hu, Y. Charlie",         "affiliation": "Purdue University"},
+      {"name": "Koutsonikolas, Dimitrios", "affiliation": "Northeastern University"}
+    ],
+    "related_identifiers": [
+      {"identifier": "10.1145/3856978", "relation": "isSupplementTo", "scheme": "doi",
+       "resource_type": "publication-article"},
+      {"identifier": "https://github.com/NUWiNS/conext26-handover-paper-dataset",
+       "relation": "isSupplementedBy", "scheme": "url"}
+    ],
+    "version": "1.0.0"
+  }
+}

@@ -47,8 +47,8 @@ Tiers are cumulative.
 | 18 | Pre/post throughput at varying time granularity | `parse_sigmetrics_merged.py` | full | not ported |
 
 Ported scripts live in `figures/` and run from the trimmed bundle. The rest
-are still the original pipeline scripts, shipped with the raw bundle; they
-carry hardcoded paths and have not been adapted.
+are still the original pipeline scripts: they carry hardcoded paths, have not
+been adapted, and are not part of this deposit.
 
 ## Derived input
 

@@ -33,7 +33,6 @@ Outputs (in <figures_out>/):
     aggressiveness_by_event.pdf
 """
 import os
-import csv
 import math
 import pickle as pkl
 import matplotlib
@@ -411,26 +410,6 @@ if dropped_rsrq:
     print()
 
 
-# Write CSV
-agg_csv = OUT_DIR + 'aggressiveness.csv'
-with open(agg_csv, 'w', newline='') as f:
-    w = csv.writer(f)
-    w.writerow(['Radio', 'TQ', 'Operator', 'Event',
-                'N', 'Aggressive', 'Moderate', 'Conservative',
-                'Aggressive_%', 'Moderate_%', 'Conservative_%'])
-    for (radio, tq, op, ev), b in agg_counts.items():
-        n = agg_total[(radio, tq, op, ev)]
-        if n == 0:
-            w.writerow([radio, tq, op, ev, 0, 0, 0, 0, '', '', ''])
-            continue
-        w.writerow([
-            radio, tq, op, ev, n,
-            b['aggressive'], b['moderate'], b['conservative'],
-            f'{100*b["aggressive"]/n:.1f}',
-            f'{100*b["moderate"]/n:.1f}',
-            f'{100*b["conservative"]/n:.1f}',
-        ])
-print(f'Aggressiveness CSV -> {agg_csv}')
 
 
 # ─── Plot: one PDF per event ────────────────────────────────────────────────

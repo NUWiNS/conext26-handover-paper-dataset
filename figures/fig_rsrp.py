@@ -2,8 +2,6 @@
 
 Produces:
     rsrp_rsrq_subplots.pdf        (Fig. RSRP/RSRQ distributions)
-    rsrq_dist_basic.pdf           (RSRQ CDFs, LTE and 5G)
-    rsrp_rsrq_percentiles.csv     (the P25/P50/P75 table printed in the text)
 
 Inputs (processed tier, medium):
     rsrp/rsrp_freq_dict_{1,2,3,2024}.pkl        ~1.1 GB
@@ -20,8 +18,6 @@ Two quirks of the inputs are handled explicitly rather than by position:
   keys ("(Searching)", "No service") that are UE radio states rather than
   operators. Both are skipped rather than special-cased per trip.
 """
-import csv
-
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -90,36 +86,6 @@ def _collect():
     return out
 
 
-def plot_rsrq_cdf():
-    """RSRQ CDFs, LTE and 5G side by side."""
-    data = _collect()["RSRQ"]
-    fig, ax = plt.subplots(1, 2, figsize=(8, 4))
-
-    for i, radio in enumerate(("LTE", "5G")):
-        for op in OPS:
-            vals = np.sort(np.asarray(data[radio][op], dtype=float))
-            vals = vals[~np.isnan(vals)]
-            if vals.size:
-                ax[i].plot(vals, np.linspace(0, 1, vals.size),
-                           color=OP_COLORS[op], label=op)
-        ax[i].set_xlabel("RSRQ (dB)", fontsize=20)
-        ax[i].set_xlim(-25, 0)
-        ax[i].set_ylim(0, 1)
-        ax[i].grid()
-        ax[i].tick_params(axis="both", labelsize=17)
-
-    ax[0].set_ylabel("CDF", fontsize=25)
-    ax[0].set_title("LTE", fontweight="bold", fontsize=23)
-    ax[1].set_title("5G", fontweight="bold", fontsize=23)
-    ax[0].legend(loc="best", fontsize=17)
-
-    plt.tight_layout()
-    p = config.out("rsrq_dist_basic.pdf")
-    plt.savefig(p)
-    plt.close()
-    return p
-
-
 def plot_rsrp_rsrq_box():
     """Boxplots of RSRP and RSRQ, grouped by radio and split by operator."""
     data = _collect()
@@ -170,31 +136,8 @@ def plot_rsrp_rsrq_box():
     return p
 
 
-def write_percentiles():
-    """P25/P50/P75 per operator and radio, for the numbers quoted in the text."""
-    data = _collect()
-    p = config.out("rsrp_rsrq_percentiles.csv")
-    with open(p, "w", newline="") as fh:
-        w = csv.writer(fh)
-        w.writerow(["metric", "operator", "technology", "n", "p25", "p50", "p75"])
-        for metric in ("RSRP", "RSRQ"):
-            for op in OPS:
-                for radio in ("LTE", "5G"):
-                    arr = np.asarray(data[metric][radio][op], dtype=float)
-                    arr = arr[~np.isnan(arr)]
-                    if arr.size == 0:
-                        w.writerow([metric, op, radio, 0, "", "", ""])
-                        continue
-                    q = np.percentile(arr, [25, 50, 75])
-                    w.writerow([metric, op, radio, arr.size,
-                                f"{q[0]:.2f}", f"{q[1]:.2f}", f"{q[2]:.2f}"])
-    return p
-
-
 FIGURES = {
     "rsrp_rsrq_subplots.pdf": plot_rsrp_rsrq_box,
-    "rsrq_dist_basic.pdf": plot_rsrq_cdf,
-    "rsrp_rsrq_percentiles.csv": write_percentiles,
 }
 
 if __name__ == "__main__":

@@ -14,7 +14,9 @@
 set -euo pipefail
 
 OUT=${1:-/mnt/nuwinsshared/moinak/conext26_dataset/tarballs}
-BUNDLE_SMALL=/mnt/nuwinsshared/moinak/conext26_dataset/bundle_small
+BUNDLE_ROOT=/mnt/nuwinsshared/moinak/conext26_dataset
+ANALYSIS_SRC=/home/moinakgh/csv_ho
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # trip label -> source all_df.pkl
 declare -A MERGED=(
@@ -52,20 +54,29 @@ for trip in $(printf '%s\n' "${!MERGED[@]}" | sort); do
 done
 
 echo
-echo "=== Tier 2: processed bundle ==="
-if [[ -d $BUNDLE_SMALL ]]; then
-  dst="$OUT/processed_bundle_small.tar.gz"
+echo "=== Tier 2: processed bundles ==="
+# Tiers are cumulative, so each tarball is self-contained: a reviewer
+# downloads the single one matching the figures they want to regenerate.
+for tier in small medium full; do
+  src="$BUNDLE_ROOT/bundle_$tier"
+  dst="$OUT/processed_bundle_$tier.tar.gz"
+
+  if [[ ! -d $src ]]; then
+    echo "BUILD bundle_$tier"
+    python3 "$REPO/prepare/make_processed_bundle.py" \
+            --src "$ANALYSIS_SRC" --out "$src" --tier "$tier" >/dev/null || {
+      echo "!! could not assemble bundle_$tier" >&2; continue; }
+  fi
   if [[ -s $dst ]]; then
     echo "SKIP  $(basename "$dst") (already built)"
-  else
-    echo "BUILD $(basename "$dst")"
-    tar --exclude=__pycache__ -I 'gzip -6' -cf "$dst" \
-        -C "$(dirname "$BUNDLE_SMALL")" "$(basename "$BUNDLE_SMALL")"
-    printf '      -> %s\n' "$(du -h "$dst" | cut -f1)"
+    continue
   fi
-else
-  echo "!! $BUNDLE_SMALL missing; build it with prepare/make_processed_bundle.py" >&2
-fi
+  printf 'BUILD %-34s from %s\n' "$(basename "$dst")" "$(du -sh "$src" | cut -f1)"
+  t0=$SECONDS
+  tar --exclude=__pycache__ -I 'gzip -6' -cf "$dst" \
+      -C "$(dirname "$src")" "$(basename "$src")"
+  printf '      -> %s in %ss\n' "$(du -h "$dst" | cut -f1)" "$((SECONDS - t0))"
+done
 
 echo
 echo "=== Deposit ==="

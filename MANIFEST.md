@@ -32,7 +32,7 @@ Tiers are cumulative.
 | 3 | Event overhead breakdown | `fig_events.py` | small | **works** |
 | 4 | Richness of HO configuration parameters | `parse_sigmetrics_diversity_merged.py` | medium | not ported |
 | 5 | Richness comparison, R(2024)−R(2022) | `parse_sigmetrics_diversity_merged.py` | medium | not ported |
-| 6 | RSRP/RSRQ distributions | `parse_overall_rsrp.py` | medium | not ported |
+| 6 | RSRP/RSRQ distributions | `fig_rsrp.py` | medium | **works** |
 | 7 | Normalized triggered events | `fig_events.py` | small | **works** |
 | 8 | Aggressiveness of an event to be triggered (a–e) | `fig_aggressiveness.py` | small | **works** |
 | 9 | Concentration of HOs across configurations (a–f) | `fig_concentration.py` | small | **works** |

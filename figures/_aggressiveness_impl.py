@@ -198,6 +198,14 @@ def classify_metric(event, tq, combo):
     return 'moderate'
 
 
+def classify_a5_parts(tq, combo):
+    """The two A5 thresholds classified separately, for the M1/M2 bars."""
+    thr1, thr2 = combo
+    if tq == 'rsrp':
+        return cls_a5_thr1_rsrp(thr1), cls_a5_thr2_rsrp(thr2)
+    return cls_a5_thr1_rsrq(thr1), cls_a5_thr2_rsrq(thr2)
+
+
 def classify(event, tq, radio, op, combo, ttt):
     """Combined overall classification for one (combo, ttt) sample."""
     metric_cls = classify_metric(event, tq, combo)
@@ -329,6 +337,11 @@ RADIO_TQ = [
 
 agg_counts   = {}   # combined classification
 metric_counts = {}  # metric-only classification
+# A5 carries two thresholds (serving < thr1, neighbour > thr2) and the paper
+# shows them as separate M1/M2 bars rather than collapsing them. Only the
+# combined view is used for every other event.
+m1_counts = {}
+m2_counts = {}
 ttt_counts    = {}  # TTT-only classification
 agg_total    = {}
 ho_only_added = {}   # (radio, tq, op, ev) -> {'configs': N, 'weight': total_HO_count}
@@ -340,11 +353,17 @@ for radio, tq, src in RADIO_TQ:
             b   = {'aggressive': 0, 'moderate': 0, 'conservative': 0}
             mb  = {'aggressive': 0, 'moderate': 0, 'conservative': 0}
             tb  = {'aggressive': 0, 'moderate': 0, 'conservative': 0}
+            p1  = {'aggressive': 0, 'moderate': 0, 'conservative': 0}
+            p2  = {'aggressive': 0, 'moderate': 0, 'conservative': 0}
             for combo, ttt in tuples:
                 m_cls = classify_metric(ev, tq, combo)
                 t_cls = cls_ttt(ttt)
                 mb[m_cls] += 1
                 tb[t_cls] += 1
+                if ev == 'A5':
+                    c1, c2 = classify_a5_parts(tq, combo)
+                    p1[c1] += 1
+                    p2[c2] += 1
                 if m_cls == 'aggressive'   and t_cls == 'aggressive':   b['aggressive']   += 1
                 elif m_cls == 'conservative' and t_cls == 'conservative': b['conservative'] += 1
                 else: b['moderate'] += 1
@@ -365,6 +384,10 @@ for radio, tq, src in RADIO_TQ:
                     t_cls = cls_ttt(ttt)
                     mb[m_cls] += n_ho
                     tb[t_cls] += n_ho
+                    if ev == 'A5':
+                        c1, c2 = classify_a5_parts(tq, combo)
+                        p1[c1] += n_ho
+                        p2[c2] += n_ho
                     if m_cls == 'aggressive'   and t_cls == 'aggressive':   b['aggressive']   += n_ho
                     elif m_cls == 'conservative' and t_cls == 'conservative': b['conservative'] += n_ho
                     else: b['moderate'] += n_ho
@@ -374,6 +397,9 @@ for radio, tq, src in RADIO_TQ:
             agg_counts[(radio, tq, op, ev)]    = b
             metric_counts[(radio, tq, op, ev)] = mb
             ttt_counts[(radio, tq, op, ev)]    = tb
+            if ev == 'A5':
+                m1_counts[(radio, tq, op, ev)] = p1
+                m2_counts[(radio, tq, op, ev)] = p2
             agg_total[(radio, tq, op, ev)]     = n_from_trig + ho_only_weight
             ho_only_added[(radio, tq, op, ev)] = {
                 'configs': ho_only_n_cfg, 'weight': ho_only_weight,
@@ -399,6 +425,8 @@ for (radio, tq, op, ev) in list(agg_total.keys()):
         del agg_total[(radio, tq, op, ev)]
         metric_counts.pop((radio, tq, op, ev), None)
         ttt_counts.pop((radio, tq, op, ev), None)
+        m1_counts.pop((radio, tq, op, ev), None)
+        m2_counts.pop((radio, tq, op, ev), None)
 
 if dropped_rsrq:
     print('Dropped RSRQ rows (sparse or dwarfed by RSRP):')
@@ -436,26 +464,34 @@ def plot_event_aggressiveness(ev):
     slots = []               # [(radio, tq, op, n, x_center)]
     group_spans = []         # [(x_start, x_end, (radio, tq))]
     x = 0
-    bar_w = 0.32             # mid-width bars
-    bar_off = 0.18           # half the M/T spacing
+    bar_w = 0.30 if ev == 'A5' else 0.32     # three bars share the wider A5 slot
+    bar_off = 0.36 if ev == 'A5' else 0.18   # half the M/T (or M1..T) spacing
     gap_between_groups = 0.55
 
-    for radio, tq in GROUP_ORDER:
+    # A5 is shown on RSRP only: the published figure has LTE RSRP and 5G RSRP
+    # panels and no RSRQ panel, and its two thresholds are drawn as separate
+    # M1/M2 bars rather than collapsed into one M.
+    split_metric = (ev == 'A5')
+    group_order = ([g for g in GROUP_ORDER if g[1] == 'rsrp']
+                   if split_metric else GROUP_ORDER)
+
+    for radio, tq in group_order:
         ops_here = [op for op in OPS if agg_total.get((radio, tq, op, ev), 0) > 0]
         if not ops_here:
             continue
         x_first = x
+        op_step = 1.6 if split_metric else 1.0   # three bars need a wider slot
         for op in ops_here:
             slots.append((radio, tq, op, agg_total[(radio, tq, op, ev)], x))
-            x += 1
-        group_spans.append((x_first - 0.5, x - 0.5, (radio, tq)))
+            x += op_step
+        group_spans.append((x_first - 0.5, x - op_step + 0.5, (radio, tq)))
         x += gap_between_groups
 
     if not slots:
         return
 
     n_slots = len(slots)
-    fig_w = max(2.8, 0.55 * n_slots + 0.7)
+    fig_w = max(2.8, (0.95 if split_metric else 0.55) * n_slots + 0.7)
     fig_h = 2.8
     fig, ax = plt.subplots(figsize=(fig_w, fig_h), constrained_layout=True)
 
@@ -465,10 +501,19 @@ def plot_event_aggressiveness(ev):
 
     # Two stacked bars per operator: metric (solid) + TTT (hatched)
     for (radio, tq, op, n, xp) in slots:
-        for side, x_pos, counts, hatch in (
-            ('M', xp - bar_off, metric_counts[(radio, tq, op, ev)], ''),
-            ('T', xp + bar_off, ttt_counts[(radio, tq, op, ev)],   '///'),
-        ):
+        key = (radio, tq, op, ev)
+        if split_metric and key in m1_counts:
+            sides = (
+                ('M1', xp - bar_off, m1_counts[key],  ''),
+                ('M2', xp,           m2_counts[key],  ''),
+                ('T',  xp + bar_off, ttt_counts[key], '///'),
+            )
+        else:
+            sides = (
+                ('M', xp - bar_off, metric_counts[key], ''),
+                ('T', xp + bar_off, ttt_counts[key],    '///'),
+            )
+        for side, x_pos, counts, hatch in sides:
             bottom = 0.0
             for cls in ('aggressive', 'moderate', 'conservative'):
                 pct = 100.0 * counts[cls] / n if n else 0

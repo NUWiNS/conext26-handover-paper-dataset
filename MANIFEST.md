@@ -36,10 +36,10 @@ Tiers are cumulative.
 | 7 | Normalized triggered events | `fig_events.py` | small | **works** |
 | 8 | Aggressiveness of an event to be triggered (a–e) | `fig_aggressiveness.py` | small | **works** |
 | 9 | Concentration of HOs across configurations (a–f) | `fig_concentration.py` | small | **works** |
-| 10 | Fraction of A3 ping-pong HOs (a, b) | `parse_sigmetrics_merged.py` | full | not ported |
+| 10 | Fraction of A3 ping-pong HOs (a, b) | `fig_pingpong.py` | full | **works** |
 | 11 | A3 dominant combinations and RSRP | `parse_sigmetrics_merged.py` | full | not ported |
-| 12 | A5 dominant combinations, performance, ping-pong | `parse_sigmetrics_merged.py` | full | not ported |
-| 13 | % of LTE–5G ping-pong HOs (a, b) | `parse_sigmetrics_merged.py` | full | not ported |
+| 12 | A5 dominant combinations, performance, ping-pong | `fig_pingpong.py` | full | ping-pong panel only |
+| 13 | % of LTE–5G ping-pong HOs (a, b) | `fig_pingpong.py` | full | panel (a) only |
 | 14 | B1 dominant combinations and performance | `parse_sigmetrics_merged.py` | full | not ported |
 | 15 | A2 dominant combinations and performance | `parse_sigmetrics_merged.py` | full | not ported |
 | 16 | RSRP and throughput correlation | `parse_ho_new_merged.py` | full | not ported |

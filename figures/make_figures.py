@@ -16,7 +16,7 @@ import traceback
 import config
 
 MODULES = ["fig_events", "fig_aggressiveness", "fig_concentration", "fig_rsrp",
-           "fig_diversity"]
+           "fig_diversity", "fig_pingpong"]
 
 
 def main():

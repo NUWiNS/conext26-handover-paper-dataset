@@ -13,8 +13,8 @@ SA), and all 5G frequency bands (low, mid, and high).
 
 ## Contents
 
-The release has two tiers. Both are on Zenodo; this repository holds only the
-code.
+The release has two tiers. Tier 1 is in this repository under `data/` via
+Git LFS and mirrored on Zenodo; tier 2 is on Zenodo.
 
 ### Tier 1 — merged measurement data
 
@@ -32,17 +32,13 @@ tarball per trip.
 They compress roughly 25×, so the whole tier is about 2 GB to download; the
 exact sizes are in `SHA256SUMS.txt` in the Zenodo record.
 
-See [`merged/README.md`](merged/README.md) for the data model, the column
-reference, and three behaviours that will otherwise catch you out.
-
-These are called *merged* rather than *raw* because they join three XCAL Solo
-exports and add parser-derived columns. The underlying XCAL CSV exports are
-~188 GB and are not deposited.
+See [`merged/README.md`](merged/README.md) for the data model and the column
+reference.
 
 ### Tier 2 — processed
 
 The derived pickles the figures are computed from, plus the figure scripts in
-this repository. ~53 MB — enough for the figures in §4, §5.2 and §5.3.
+this repository. ~53 MB.
 
 ## Getting the data
 
@@ -144,9 +140,11 @@ deposit/
 
 ## Citation
 
-If you use this dataset, please cite the CoNEXT '26 paper and the Zenodo
-record:
-
-- Paper: [10.1145/3856978](https://doi.org/10.1145/3856978) — *Proc. ACM Netw.*
-  4, CoNEXT4, Article 64 (December 2026).
-- Dataset: [10.5281/zenodo.23677824](https://doi.org/10.5281/zenodo.23677824)
+```bibtex
+@article{ghoshal:conext2026,
+  title={Too Many Reports, Too Few Handovers: A Large-Scale Study of Configuration Inefficiencies in Operational 5G Networks},
+  author={Ghoshal, Moinak and Khan, Imran and Dinh, Phuc and Kong, Z. Jonny and Basit, Omar and Wang, Sizhe and Feng, Yufei and Hu, Y Charlie and Koutsonikolas, Dimitrios},
+  booktitle={In Proceedings of the 22nd ACM International Conference on Emerging Networking EXperiments and Technologies},
+  year={2026}
+}
+```

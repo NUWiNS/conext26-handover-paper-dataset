@@ -46,20 +46,42 @@ this repository. ~53 MB — enough for the figures in §4, §5.2 and §5.3.
 
 ## Getting the data
 
-```bash
-# smallest useful download: everything the figure scripts need
-curl -LO https://zenodo.org/records/23677824/files/processed_bundle_small.tar.gz
-tar -xzf processed_bundle_small.tar.gz
+The merged tarballs are in this repository under `data/`, stored with Git LFS,
+and mirrored in the Zenodo record.
 
-# one trip of merged data
-curl -LO https://zenodo.org/records/23677824/files/trip2_2023_all_df.tar.gz
-tar -xzf trip2_2023_all_df.tar.gz
+### From GitHub
+
+```bash
+git lfs install
+git clone https://github.com/NUWiNS/conext26-handover-paper-dataset.git
+cd conext26-handover-paper-dataset           # ~1.7 GB of LFS objects
 ```
 
-Verify any download against `SHA256SUMS.txt` from the same record:
+To avoid pulling all four trips, skip the LFS download on clone and fetch only
+what you need:
 
 ```bash
-sha256sum -c SHA256SUMS.txt --ignore-missing
+GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/NUWiNS/conext26-handover-paper-dataset.git
+cd conext26-handover-paper-dataset
+git lfs pull --include="data/trip2_2023_all_df.tar.gz"
+```
+
+> **Checksums will fail until you pull.** Files you have not fetched are
+> 134-byte LFS pointers, not archives, so `sha256sum -c` reports them as
+> FAILED. That is expected — verify only what you have actually pulled.
+
+### From Zenodo
+
+```bash
+curl -LO https://zenodo.org/records/23677824/files/trip2_2023_all_df.tar.gz
+curl -LO https://zenodo.org/records/23677824/files/processed_bundle_small.tar.gz
+```
+
+### Verify and unpack
+
+```bash
+sha256sum -c data/SHA256SUMS.txt --ignore-missing
+tar -xzf data/trip2_2023_all_df.tar.gz        # -> trip2_2023_all_df.pkl
 ```
 
 Then explore the merged data by trip, operator and date:

@@ -8,10 +8,11 @@ holds the analysis tree.
         --out /path/to/processed --tier small
     python prepare/make_processed_bundle.py --src ... --out ... --tier all --dry-run
 
-Tiers are cumulative:
-    small   events + aggressiveness   (~53 MB)  -> Figs 3, 7, 8, 9
-    medium  + richness + RSRP         (~1.2 GB) -> Figs 4, 5, 6
-    full    + handover + throughput   (~19 GB)  -> Figs 2, 10-16, 18
+Tiers are cumulative. Each line lists only the figures that tier adds, and
+only the ones figures/ actually generates (see MANIFEST.md):
+    small   events + aggressiveness   (~53 MB)  -> Figs 2, 3, 4, 5, 8, 9
+    medium  + RSRP + rest of richness (~1.2 GB) -> Fig 6
+    full    + handover                (~19 GB)  -> Figs 10, 12(c), 13(a)
 """
 import argparse
 import shutil
